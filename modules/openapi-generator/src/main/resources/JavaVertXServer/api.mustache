@@ -3,31 +3,25 @@ package {{package}};
 {{#imports}}import {{import}};
 {{/imports}}
 
-{{#rxInterface}}
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
-{{/rxInterface}}
-{{^rxInterface}}
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
-{{/rxInterface}}
+{{#useFuture}}
+  import io.vertx.core.Future;
+{{/useFuture}}
+{{^useFuture}}
+  import io.vertx.core.Handler;
+  import io.vertx.core.AsyncResult;
+{{/useFuture}}
+import io.vertx.ext.web.validation.RequestParameter;
+import io.vertx.ext.web.api.service.ServiceRequest;
+import io.vertx.ext.web.api.service.ServiceResponse;
 
 import java.util.List;
 import java.util.Map;
 
 public interface {{classname}}  {
-{{#operations}}
-{{#operation}}
-    //{{#vendorExtensions}}{{x-serviceid}}{{/vendorExtensions}}
-    {{#rxInterface}}
-{{>RxMethod}}
 
-    {{/rxInterface}}
-    {{^rxInterface}}
-{{>AsyncMethod}}
+{{#operations}}{{#operation}}{{#-first}}    String WEBSERVICE_ADDRESS_{{#lambda.uppercase}}{{classname}}{{/lambda.uppercase}} = "{{baseName}}.address";{{/-first}}
+    String OPERATION_ID_{{#lambda.uppercase}}{{operationId}}{{/lambda.uppercase}} = "{{operationId}}";
+    {{#useFuture}}Future<ServiceResponse>{{/useFuture}}{{^useFuture}}void{{/useFuture}} {{#vendorExtensions}}{{x-serviceid}}{{/vendorExtensions}}({{#useDataObject}}{{#parameters}}{{^isBodyParam}}{{^isEnum}}{{#datatypeWithEnum}}{{{.}}}{{/datatypeWithEnum}}{{^datatypeWithEnum}}{{{dataType}}}{{/datatypeWithEnum}}{{/isEnum}}{{#isEnum}}{{{dataType}}}{{/isEnum}} {{paramName}}{{/isBodyParam}}{{#isBodyParam}}{{^isBinary}}{{^parent}}{{^children}}{{{dataType}}} body{{/children}}{{/parent}}{{/isBinary}}{{/isBodyParam}}{{#hasMore}}{{^isBinary}}, {{/isBinary}}{{/hasMore}}{{^hasMore}}{{^isBinary}}, {{/isBinary}}{{/hasMore}}{{/parameters}}{{/useDataObject}}{{^useDataObject}}RequestParameter body, {{/useDataObject}}ServiceRequest request{{^useFuture}}, Handler<AsyncResult<ServiceResponse>> resultHandler{{/useFuture}});
+  {{/operation}}{{/operations}}
 
-    {{/rxInterface}}
-
-{{/operation}}
-{{/operations}}
 }
