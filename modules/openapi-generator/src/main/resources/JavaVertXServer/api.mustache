@@ -10,9 +10,7 @@ package {{package}};
   import io.vertx.core.Handler;
   import io.vertx.core.AsyncResult;
 {{/useFuture}}
-import io.vertx.ext.web.validation.RequestParameter;
-import io.vertx.ext.web.api.service.ServiceRequest;
-import io.vertx.ext.web.api.service.ServiceResponse;
+import io.vertx.ext.web.RoutingContext;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +19,6 @@ public interface {{classname}}  {
 
 {{#operations}}{{#operation}}{{#-first}}    String WEBSERVICE_ADDRESS_{{#lambda.uppercase}}{{classname}}{{/lambda.uppercase}} = "{{baseName}}.address";{{/-first}}
     String OPERATION_ID_{{#lambda.uppercase}}{{operationId}}{{/lambda.uppercase}} = "{{operationId}}";
-    {{#useFuture}}Future<ServiceResponse>{{/useFuture}}{{^useFuture}}void{{/useFuture}} {{#vendorExtensions}}{{x-serviceid}}{{/vendorExtensions}}({{#useDataObject}}{{#parameters}}{{^isBodyParam}}{{^isEnum}}{{#datatypeWithEnum}}{{{.}}}{{/datatypeWithEnum}}{{^datatypeWithEnum}}{{{dataType}}}{{/datatypeWithEnum}}{{/isEnum}}{{#isEnum}}{{{dataType}}}{{/isEnum}} {{paramName}}{{/isBodyParam}}{{#isBodyParam}}{{^isBinary}}{{^parent}}{{^children}}{{{dataType}}} body{{/children}}{{/parent}}{{/isBinary}}{{/isBodyParam}}{{#hasMore}}{{^isBinary}}, {{/isBinary}}{{/hasMore}}{{^hasMore}}{{^isBinary}}, {{/isBinary}}{{/hasMore}}{{/parameters}}{{/useDataObject}}{{^useDataObject}}RequestParameter body, {{/useDataObject}}ServiceRequest request{{^useFuture}}, Handler<AsyncResult<ServiceResponse>> resultHandler{{/useFuture}});
+    {{#useFuture}}Future<Void>{{/useFuture}}{{^useFuture}}void{{/useFuture}} {{#vendorExtensions}}{{x-serviceid}}{{/vendorExtensions}}(RoutingContext routingContext{{#useDataObject}}{{#allParams}}, {{^isBodyParam}}{{^isEnum}}{{#datatypeWithEnum}}{{{.}}}{{/datatypeWithEnum}}{{^datatypeWithEnum}}{{{dataType}}}{{/datatypeWithEnum}}{{/isEnum}}{{#isEnum}}{{{dataType}}}{{/isEnum}} {{paramName}}{{/isBodyParam}}{{#isBodyParam}}{{^isBinary}}{{^parent}}{{^children}}{{{dataType}}} body{{/children}}{{/parent}}{{/isBinary}}{{/isBodyParam}}{{#hasMore}}{{^isBinary}}{{/isBinary}}{{/hasMore}}{{^hasMore}}{{^isBinary}}{{/isBinary}}{{/hasMore}}{{/allParams}}{{/useDataObject}}{{^useFuture}}, Handler<AsyncResult<Void>> resultHandler{{/useFuture}});
   {{/operation}}{{/operations}}
-
 }
