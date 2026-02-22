@@ -34,27 +34,24 @@
     </dependencyManagement>
 
     <dependencies>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-openapi</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-openapi-router</artifactId>
+      </dependency>{{#rxInterface}}
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-rx-java3</artifactId>
+      </dependency>{{/rxInterface}}
 
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-web-openapi</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-web-api-service</artifactId>
-      </dependency>
-      {{#rxInterface}}
-        <dependency>
-          <groupId>io.vertx</groupId>
-          <artifactId>vertx-rx-java3</artifactId>
-        </dependency>
-      {{/rxInterface}}
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-codegen</artifactId>
         <scope>provided</scope>
       </dependency>
-
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-codegen</artifactId>
