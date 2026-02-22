@@ -433,6 +433,9 @@ public class CodegenConstants {
     public static final String USE_VERTX_5 = "useVertx5";
     public static final String USE_VERTX_5_DESC = "Setting this property to true will generate Vert.x 5 specific callbacks using Callables.";
 
+    public static final String USE_DATAOBJECT = "useDataObject";
+    public static final String USE_DATAOBJECT_DESC = "Setting this property to true will generate @DataObject (and @JsonGen fort Vert.x 5)";
+
     public static final String OPTIONAL_NON_NULL_PROPERTY_JSON_INCLUDE = "optionalNonNullPropertyJsonInclude";
 
     public static final String OPTIONAL_NON_NULL_PROPERTY_JSON_SETTER_NULLS = "optionalNonNullPropertyJsonSetterNulls";

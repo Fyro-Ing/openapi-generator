@@ -74,6 +74,7 @@ public class JavaClientCodegen extends AbstractJavaCodegen
     public static final String USE_RX_JAVA3 = "useRxJava3";
     public static final String DO_NOT_USE_RX = "doNotUseRx";
     public static final String USE_VERTX_5 = "useVertx5";
+    public static final String USE_DATAOBJECT = "useDataObject";
     public static final String USE_PLAY_WS = "usePlayWS";
     public static final String ASYNC_NATIVE = "asyncNative";
     public static final String CONFIG_KEY = "configKey";
@@ -144,6 +145,7 @@ public class JavaClientCodegen extends AbstractJavaCodegen
     protected boolean useRxJava2 = false;
     protected boolean useRxJava3 = false;
     @Setter protected boolean useVertx5 = false;
+    @Setter protected boolean useDataObject = false;
     // backwards compatibility for openapi configs that specify neither rx1 nor rx2
     // (mustache does not allow for boolean operators so we need this extra field)
     @Setter protected boolean doNotUseRx = true;
@@ -266,6 +268,7 @@ public class JavaClientCodegen extends AbstractJavaCodegen
         cliOptions.add(CliOption.newBoolean(USE_RX_JAVA3, "Whether to use the RxJava3 adapter with the retrofit2 library. IMPORTANT: This option has been deprecated."));
         cliOptions.add(CliOption.newBoolean(PARCELABLE_MODEL, "Whether to generate models for Android that implement Parcelable with the okhttp-gson library."));
         cliOptions.add(CliOption.newBoolean(USE_VERTX_5, "Whether to use Vert.x 5 syntax."));
+        cliOptions.add(CliOption.newBoolean(USE_DATAOBJECT, USE_DATAOBJECT_DESC));
         cliOptions.add(CliOption.newBoolean(USE_PLAY_WS, "Use Play! Async HTTP client (Play WS API)"));
         cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
         cliOptions.add(CliOption.newBoolean(PERFORM_BEANVALIDATION, "Perform BeanValidation"));
@@ -451,6 +454,8 @@ public class JavaClientCodegen extends AbstractJavaCodegen
             convertPropertyToBooleanAndWriteBack(USE_RX_JAVA2, this::setUseRxJava2);
         }
         convertPropertyToBooleanAndWriteBack(CodegenConstants.USE_VERTX_5, this::setUseVertx5);
+
+        convertPropertyToBooleanAndWriteBack(CodegenConstants.USE_DATAOBJECT, this::setUseDataObject);
 
         convertPropertyToStringAndWriteBack(CodegenConstants.USE_SINGLE_REQUEST_PARAMETER, this::setUseSingleRequestParameter);
         convertPropertyToBooleanAndWriteBack(USE_SEALED_ONE_OF_INTERFACES, this::setUseSealedOneOfInterfaces);
@@ -774,10 +779,24 @@ public class JavaClientCodegen extends AbstractJavaCodegen
         } else if (libVertx) {
             typeMapping.put("file", "AsyncFile");
             importMapping.put("AsyncFile", "io.vertx.core.file.AsyncFile");
+            importMapping.put("JsonObject", "io.vertx.core.json.JsonObject");
+            importMapping.put("JsonArray", "io.vertx.core.json.JsonArray");
             forceSerializationLibrary(SERIALIZATION_LIBRARY_JACKSON);
             apiTemplateFiles.put("apiImpl.mustache", "Impl.java");
             apiTemplateFiles.put("rxApiImpl.mustache", ".java");
             supportingFiles.remove(new SupportingFile("manifest.mustache", projectFolder, "AndroidManifest.xml"));
+
+            if (useDataObject) {
+                supportingFiles.add(new SupportingFile("package-info-model.mustache", modelsFolder, "package-info.java"));
+                supportingFiles.add(new SupportingFile("json-mappers.mustache", "src/main/resources/META-INF/vertx", "json-mappers.properties"));
+                supportingFiles.add(new SupportingFile("DataObjectMapper.mustache", modelsFolder, "DataObjectMapper.java"));
+            }
+
+            if (useVertx5 && !useRxJava3 && !useRxJava2) {
+                // rx 1 do not exist on Vert.x 5
+                setUseRxJava3(true);
+            }
+
         } else if (libGoogleApiClient) {
             forceSerializationLibrary(SERIALIZATION_LIBRARY_JACKSON);
         } else if (libRestAssured) {
@@ -1160,6 +1179,8 @@ public class JavaClientCodegen extends AbstractJavaCodegen
                 model.imports.add("JsonWriter");
                 model.imports.add("IOException");
             }
+            model.imports.add("JsonObject");
+            model.imports.add("JsonArray");
         } else { // enum class
             //Needed imports for Jackson's JsonCreator
             if (additionalProperties.containsKey(SERIALIZATION_LIBRARY_JACKSON)) {

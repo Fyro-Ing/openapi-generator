@@ -144,8 +144,20 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
-                    <source>{{#useVertx5}}11{{/useVertx5}}{{^useVertx5}}1.8{{/useVertx5}}</source>
-                    <target>{{#useVertx5}}11{{/useVertx5}}{{^useVertx5}}1.8{{/useVertx5}}</target>
+                    <source>{{#useVertx5}}{{#useJackson3}}17{{/useJackson3}}{{^useJackson3}}11{{/useJackson3}}{{/useVertx5}}{{^useVertx5}}1.8{{/useVertx5}}</source>
+                    <target>{{#useVertx5}}{{#useJackson3}}17{{/useJackson3}}{{^useJackson3}}11{{/useJackson3}}{{/useVertx5}}{{^useVertx5}}1.8{{/useVertx5}}</target>{{#useDataObject}}
+                    <annotationProcessorPaths>
+                      <path>
+                        <groupId>io.vertx</groupId>
+                        <artifactId>vertx-codegen</artifactId>
+                        <version>${vertx-version}</version>
+                      </path>
+                      <path>
+                        <groupId>io.vertx</groupId>
+                        <artifactId>vertx-codegen-json</artifactId>
+                        <version>${vertx-version}</version>
+                      </path>
+                    </annotationProcessorPaths>{{/useDataObject}}
                 </configuration>
             </plugin>
             <plugin>
@@ -239,6 +251,20 @@
             <artifactId>vertx-web-client</artifactId>
             <version>${vertx-version}</version>
         </dependency>
+        {{#useDataObject}}
+          <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-codegen</artifactId>
+            <version>${vertx-version}</version>
+            <scope>provided</scope>
+          </dependency>
+          <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-codegen-json</artifactId>
+            <version>${vertx-version}</version>
+            <scope>provided</scope>
+          </dependency>
+        {{/useDataObject}}
 
         <!-- JSON processing: jackson -->
         <dependency>
