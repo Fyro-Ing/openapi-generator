@@ -4,8 +4,8 @@ package {{package}};
 {{/imports}}
 
 {{#rxInterface}}
-import {{#rxVersion2}}io.reactivex{{/rxVersion2}}{{^rxVersion2}}rx{{/rxVersion2}}.Completable;
-import {{#rxVersion2}}io.reactivex{{/rxVersion2}}{{^rxVersion2}}rx{{/rxVersion2}}.Single;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 {{/rxInterface}}
 {{^rxInterface}}
 import io.vertx.core.AsyncResult;

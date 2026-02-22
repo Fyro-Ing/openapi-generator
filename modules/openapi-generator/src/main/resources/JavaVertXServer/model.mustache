@@ -3,10 +3,47 @@ package {{package}};
 import java.util.Objects;
 {{#imports}}import {{import}};
 {{/imports}}
-{{#serializableModel}}import java.io.Serializable;
-{{/serializableModel}}{{#models}}{{#model}}{{#description}}
-/**
- * {{.}}
- **/
-{{/description}}{{^description}}
-{{/description}}{{#isEnum}}{{>enumOuterClass}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}{{/model}}{{/models}}
+{{#openApiNullable}}
+  import org.openapitools.jackson.nullable.JsonNullable;
+{{/openApiNullable}}
+{{#serializableModel}}
+  import java.io.Serializable;
+{{/serializableModel}}
+import java.time.OffsetDateTime;
+{{#useBeanValidation}}
+  import {{javaxPackage}}.validation.Valid;
+  import {{javaxPackage}}.validation.constraints.*;
+{{/useBeanValidation}}
+{{^useBeanValidation}}
+  import {{javaxPackage}}.validation.constraints.NotNull;
+{{/useBeanValidation}}
+{{#performBeanValidation}}
+  import org.hibernate.validator.constraints.*;
+{{/performBeanValidation}}
+{{#swagger2AnnotationLibrary}}
+  import io.swagger.v3.oas.annotations.media.Schema;
+{{/swagger2AnnotationLibrary}}
+{{#useDataObject}}
+import io.vertx.codegen.annotations.DataObject;
+{{#vertxV5}}import io.vertx.codegen.json.annotations.JsonGen;{{/vertxV5}}{{/useDataObject}}
+
+import java.util.*;
+import {{javaxPackage}}.annotation.Generated;
+
+{{#models}}
+  {{#model}}
+    {{#additionalPropertiesType}}
+      import java.util.Map;
+      import java.util.HashMap;
+      import com.fasterxml.jackson.annotation.JsonAnyGetter;
+      import com.fasterxml.jackson.annotation.JsonAnySetter;
+    {{/additionalPropertiesType}}
+    {{#isEnum}}
+      {{>enumOuterClass}}
+
+    {{/isEnum}}
+    {{^isEnum}}
+      {{#vendorExtensions.x-is-one-of-interface}}{{>oneof_interface}}{{/vendorExtensions.x-is-one-of-interface}}{{^vendorExtensions.x-is-one-of-interface}}{{>pojo}}{{/vendorExtensions.x-is-one-of-interface}}
+    {{/isEnum}}
+  {{/model}}
+{{/models}}
