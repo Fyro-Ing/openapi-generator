@@ -2,10 +2,11 @@ package {{apiPackage}};
 
 {{#rxInterface}}
 import io.reactivex.rxjava3.core.Completable;
-import io.vertx.reactivex.core.AbstractVerticle;
-import io.vertx.reactivex.core.http.HttpServer;
-import io.vertx.reactivex.ext.web.Router;
-import io.vertx.reactivex.ext.web.openapi.RouterBuilder;
+import io.vertx.rxjava3.core.AbstractVerticle;
+import io.vertx.rxjava3.core.http.HttpServer;
+import io.vertx.rxjava3.ext.web.Router;
+import io.vertx.rxjava3.ext.web.openapi.RouterBuilder;
+import io.vertx.rxjava3.openapi.contract.OpenAPIContract;
 {{/rxInterface}}
 {{^rxInterface}}
 import io.vertx.core.AbstractVerticle;
@@ -14,6 +15,7 @@ import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.openapi.RouterBuilder;
+import io.vertx.openapi.contract.OpenAPIContract;
 {{/rxInterface}}
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
@@ -27,18 +29,14 @@ public class {{classname}}Verticle extends AbstractVerticle {
   HttpServer server;
 
   @Override
-  {{^rxInterface}}public void start(Promise<Void> startPromise) throws Exception {
-    RouterBuilder.create(this.vertx, "{{specLocation}}")
-      .flatMap(routerBuilder -> { {{/rxInterface}}
-  {{#rxInterface}}public Completable rxStart() {
-    return RouterBuilder.rxCreate(this.vertx, "{{specLocation}}")
-      .map(routerBuilder -> { {{/rxInterface}}
-        RouterBuilderOptions factoryOptions = new RouterBuilderOptions()
-          .setRequireSecurityHandlers(false)
-          .setMountResponseContentTypeHandler(true);
+  {{^rxInterface}}public void start(Promise<Void> startPromise) throws Exception { {{/rxInterface}}
+  {{#rxInterface}}public Completable rxStart() { {{/rxInterface}}
+    OpenAPIContract.from(vertx, "{{specLocation}}")
+      .flatMap(contract -> {
+        final RouterBuilder routerBuilder = RouterBuilder.create(this.vertx, contract);
         routerBuilder.setOptions(factoryOptions);
 
-        return {{#rxInterface}}routerBuilder.createRouter(){{/rxInterface}}{{^rxInterface}}Future.succeededFuture(routerBuilder.createRouter()){{/rxInterface}};
+        return {{^rxInterface}}Future.succeededFuture({{/rxInterface}}routerBuilder.createRouter(){{^rxInterface}}){{/rxInterface}};
       })
       .flatMap(openapiRouter -> {
         Router router = Router.router(vertx);
