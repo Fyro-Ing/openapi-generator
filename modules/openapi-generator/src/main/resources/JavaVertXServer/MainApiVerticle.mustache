@@ -1,4 +1,4 @@
-package {{package}};
+package {{invokerPackage}};
 
 {{#rxInterface}}
 import io.reactivex.Completable;
@@ -6,6 +6,7 @@ import io.vertx.reactivex.core.AbstractVerticle;
 {{/rxInterface}}
 {{^rxInterface}}
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
 {{/rxInterface}}
 import org.slf4j.Logger;

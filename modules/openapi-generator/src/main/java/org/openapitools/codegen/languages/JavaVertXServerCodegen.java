@@ -55,7 +55,6 @@ public class JavaVertXServerCodegen extends AbstractJavaCodegen implements Vertx
     private final Logger LOGGER = LoggerFactory.getLogger(JavaVertXServerCodegen.class);
 
     protected String resourceFolder = "src/main/resources";
-    protected String invokerPackage = "org.openapitools.vertx.server";
     protected String apiVersion = "1.0.0-SNAPSHOT";
 
     @Getter @Setter
@@ -102,6 +101,7 @@ public class JavaVertXServerCodegen extends AbstractJavaCodegen implements Vertx
 
         embeddedTemplateDir = templateDir = "JavaVertXServer";
 
+        invokerPackage = "org.openapitools.vertx.server";
         apiPackage = invokerPackage + ".verticle";
         modelPackage = invokerPackage + ".model";
         artifactId = "openapi-java-vertx-server";
