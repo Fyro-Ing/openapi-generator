@@ -17,7 +17,7 @@
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
 
-        <vertx.version>4.2.4</vertx.version>
+        <vertx-version>{{#useVertx5}}5.2.0{{/useVertx5}}{{^useVertx5}}4.5.34{{/useVertx5}}</vertx-version>
         <junit-jupiter.version>5.10.0</junit-jupiter.version>
         <slf4j.version>1.7.30</slf4j.version>
         <jackson.version>2.18.9</jackson.version>
@@ -52,7 +52,17 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web-openapi</artifactId>
+        </dependency>{{#useDataObject}}
+        <dependency>
+          <groupId>io.vertx</groupId>
+          <artifactId>vertx-codegen</artifactId>
+          <scope>provided</scope>
         </dependency>
+        <dependency>
+          <groupId>io.vertx</groupId>
+          <artifactId>vertx-codegen-json</artifactId>
+          <scope>provided</scope>
+        </dependency>{{/useDataObject}}
         <dependency>
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-databind</artifactId>
@@ -84,8 +94,20 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                  <source>{{#useVertx5}}{{#useJackson3}}17{{/useJackson3}}{{^useJackson3}}11{{/useJackson3}}{{/useVertx5}}{{^useVertx5}}1.8{{/useVertx5}}</source>
+                  <target>{{#useVertx5}}{{#useJackson3}}17{{/useJackson3}}{{^useJackson3}}11{{/useJackson3}}{{/useVertx5}}{{^useVertx5}}1.8{{/useVertx5}}</target>{{#useDataObject}}
+                    <annotationProcessorPaths>
+                      <path>
+                        <groupId>io.vertx</groupId>
+                        <artifactId>vertx-codegen</artifactId>
+                        <version>${vertx-version}</version>
+                      </path>
+                      <path>
+                        <groupId>io.vertx</groupId>
+                        <artifactId>vertx-codegen-json</artifactId>
+                        <version>${vertx-version}</version>
+                      </path>
+                    </annotationProcessorPaths>{{/useDataObject}}
                 </configuration>
             </plugin>
 {{^interfaceOnly}}

@@ -5,6 +5,9 @@ import java.util.Objects;
 {{/imports}}
 {{#serializableModel}}import java.io.Serializable;
 {{/serializableModel}}{{#models}}{{#model}}{{#description}}
+{{#useDataObject}}import io.vertx.codegen.annotations.DataObject;
+{{#useVertx5}}import io.vertx.codegen.json.annotations.JsonGen;{{/useVertx5}}
+{{/useDataObject}}
 /**
  * {{.}}
  **/

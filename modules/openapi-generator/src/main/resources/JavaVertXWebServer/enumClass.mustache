@@ -14,4 +14,10 @@
     public String toString() {
       return value;
     }
+
+    {{#useDataObject}}
+    public static {{{datatype}}} serialize({{#datatypeWithEnum}}{{{.}}}{{/datatypeWithEnum}}{{^datatypeWithEnum}}{{{classname}}}{{/datatypeWithEnum}} enumValue) {
+      return enumValue.getValue();
+    }
+    {{/useDataObject}}
   }

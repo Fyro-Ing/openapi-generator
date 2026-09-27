@@ -1,0 +1,9 @@
+generatorName: java-vertx-web
+outputDir: samples/server/petstore/java-vertx-web-dataobject
+inputSpec: modules/openapi-generator/src/test/resources/3_0/petstore.yaml
+templateDir: modules/openapi-generator/src/main/resources/JavaVertXWebServer
+useVertx5: true
+useDataObject: true
+additionalProperties:
+  hideGenerationTimestamp: "true"
+  artifactId: java-vertx-web-server

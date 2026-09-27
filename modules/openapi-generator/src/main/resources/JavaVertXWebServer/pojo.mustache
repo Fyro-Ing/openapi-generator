@@ -1,4 +1,6 @@
 {{>additionalModelTypeAnnotations}}@JsonInclude(JsonInclude.Include.NON_NULL)
+{{#useDataObject}}@DataObject{{^useVertx5}}(generateConverter = true){{/useVertx5}}
+{{#useVertx5}}@JsonGen{{/useVertx5}}{{/useDataObject}}
 public class {{classname}} {{#parent}}extends {{{.}}}{{/parent}} {{#vendorExtensions.x-implements}}{{#-first}}implements {{{.}}}{{/-first}}{{^-first}}, {{{.}}}{{/-first}}{{/vendorExtensions.x-implements}} {
   {{#vars}}{{#isEnum}}{{^isContainer}}
 
@@ -10,6 +12,18 @@ public class {{classname}} {{#parent}}extends {{{.}}}{{/parent}} {{#vendorExtens
   public {{classname}} () {
 
   }
+{{#useDataObject}}
+  public {{classname}}(JsonObject json) {
+    {{#parent}}{{#hasVars}}super(json);{{/hasVars}}{{/parent}}
+    {{classname}}Converter.fromJson(json, this);
+  }
+
+  public JsonObject toJson() {
+    JsonObject json = new JsonObject();
+    {{classname}}Converter.toJson(this, json);
+  return json;
+  }
+{{/useDataObject}}
 
   public {{classname}} ({{#vars}}{{{datatypeWithEnum}}} {{name}}{{^-last}}, {{/-last}}{{/vars}}) {
     {{#vars}}

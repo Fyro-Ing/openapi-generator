@@ -17,6 +17,7 @@
 package org.openapitools.codegen.languages;
 
 import io.swagger.v3.oas.models.media.Schema;
+import lombok.Setter;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.meta.GeneratorMetadata;
 import org.openapitools.codegen.meta.Stability;
@@ -33,15 +34,22 @@ import java.util.stream.Stream;
 
 import static org.openapitools.codegen.CodegenConstants.INTERFACE_ONLY;
 import static org.openapitools.codegen.CodegenConstants.INTERFACE_ONLY_DESC;
+import static org.openapitools.codegen.CodegenConstants.USE_DATAOBJECT_DESC;
 
 /**
  * <p>Mustache templates are located in {@code src/main/resources/JavaVertXWebServer/}.
  */
 public class JavaVertXWebServerCodegen extends AbstractJavaCodegen {
 
+    public static final String USE_VERTX_5 = "useVertx5";
+    public static final String USE_DATAOBJECT = "useDataObject";
+
     protected String resourceFolder = "src/main/resources";
     protected String apiVersion = "1.0.0-SNAPSHOT";
     protected boolean interfaceOnly = false;
+
+    @Setter protected boolean useVertx5 = false;
+    @Setter protected boolean useDataObject = false;
     
     public JavaVertXWebServerCodegen() {
         super();
@@ -75,6 +83,9 @@ public class JavaVertXWebServerCodegen extends AbstractJavaCodegen {
         
         cliOptions.add(CliOption.newBoolean(INTERFACE_ONLY, INTERFACE_ONLY_DESC));
 
+        cliOptions.add(CliOption.newBoolean(USE_VERTX_5, "Whether to use Vert.x 5 syntax."));
+        cliOptions.add(CliOption.newBoolean(USE_DATAOBJECT, USE_DATAOBJECT_DESC));
+
         // Override type mapping
         typeMapping.put("file", "FileUpload");
         typeMapping.put("UUID", "String");
@@ -106,6 +117,9 @@ public class JavaVertXWebServerCodegen extends AbstractJavaCodegen {
         }
         additionalProperties.put(INTERFACE_ONLY, interfaceOnly);
 
+        convertPropertyToBooleanAndWriteBack(CodegenConstants.USE_VERTX_5, this::setUseVertx5);
+        convertPropertyToBooleanAndWriteBack(CodegenConstants.USE_DATAOBJECT, this::setUseDataObject);
+
         apiTemplateFiles.clear();
         apiTemplateFiles.put("api.mustache", ".java");
         apiTemplateFiles.put("apiHandler.mustache", "Handler.java");
@@ -122,6 +136,7 @@ public class JavaVertXWebServerCodegen extends AbstractJavaCodegen {
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
         importMapping.put("FileUpload", "io.vertx.ext.web.FileUpload");
         importMapping.put("JsonObject", "io.vertx.core.json.JsonObject");
+        importMapping.put("JsonArray", "io.vertx.core.json.JsonArray");
 
         modelDocTemplateFiles.clear();
         apiDocTemplateFiles.clear();
@@ -137,6 +152,13 @@ public class JavaVertXWebServerCodegen extends AbstractJavaCodegen {
 
         supportingFiles.add(new SupportingFile("README.mustache", "", "README.md")
                 .doNotOverwrite());
+
+        if (useDataObject) {
+            final String modelPackageFolder = sourceFolder + File.separator + modelPackage.replace(".", File.separator);
+            supportingFiles.add(new SupportingFile("supportFiles/package-info-model.mustache", modelPackageFolder, "package-info.java"));
+            supportingFiles.add(new SupportingFile("supportFiles/json-mappers.mustache", resourceFolder + "/META-INF/vertx", "json-mappers.properties"));
+            supportingFiles.add(new SupportingFile("supportFiles/DataObjectMapper.mustache", modelPackageFolder, "DataObjectMapper.java"));
+        }
     }
 
     @Override
@@ -145,6 +167,8 @@ public class JavaVertXWebServerCodegen extends AbstractJavaCodegen {
         if (!model.isEnum) {
             model.imports.add("JsonInclude");
             model.imports.add("JsonProperty");
+            model.imports.add("JsonObject");
+            model.imports.add("JsonArray");
             if (model.hasEnums) {
                 model.imports.add("JsonValue");
             }
