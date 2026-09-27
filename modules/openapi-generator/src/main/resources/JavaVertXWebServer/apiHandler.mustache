@@ -3,7 +3,7 @@ package {{package}};
 {{#imports}}import {{import}};
 {{/imports}}
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import {{jacksonPackage}}.core.type.TypeReference;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.ext.web.openapi.RouterBuilder;
 import io.vertx.ext.web.validation.RequestParameters;

@@ -20,7 +20,12 @@
         <vertx-version>{{#useVertx5}}5.2.0{{/useVertx5}}{{^useVertx5}}4.5.34{{/useVertx5}}</vertx-version>
         <junit-jupiter.version>5.10.0</junit-jupiter.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <jackson.version>2.18.9</jackson.version>
+        {{#useJackson3}}
+          <jackson-version>3.1.5</jackson-version>
+        {{/useJackson3}}
+        {{^useJackson3}}
+          <jackson-version>2.21.5</jackson-version>
+        {{/useJackson3}}
 
 {{^interfaceOnly}}
         <main.verticle>{{invokerPackage}}.HttpServerVerticle</main.verticle>
@@ -64,9 +69,19 @@
           <scope>provided</scope>
         </dependency>{{/useDataObject}}
         <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
+          <groupId>{{jacksonPackage}}.core</groupId>
           <artifactId>jackson-databind</artifactId>
-          <version>${jackson.version}</version>
+          <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+          <version>${jackson-annotations-version}</version>
+        </dependency>
+        <dependency>
+          <groupId>{{jacksonPackage}}.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
