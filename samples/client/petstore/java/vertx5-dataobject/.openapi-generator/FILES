@@ -77,8 +77,6 @@ src/main/java/org/openapitools/client/Configuration.java
 src/main/java/org/openapitools/client/JavaTimeFormatter.java
 src/main/java/org/openapitools/client/Pair.java
 src/main/java/org/openapitools/client/RFC3339DateFormat.java
-src/main/java/org/openapitools/client/RFC3339InstantDeserializer.java
-src/main/java/org/openapitools/client/RFC3339JavaTimeModule.java
 src/main/java/org/openapitools/client/ServerConfiguration.java
 src/main/java/org/openapitools/client/ServerVariable.java
 src/main/java/org/openapitools/client/StringUtil.java
@@ -121,6 +119,7 @@ src/main/java/org/openapitools/client/model/Category.java
 src/main/java/org/openapitools/client/model/ChildWithNullable.java
 src/main/java/org/openapitools/client/model/ClassModel.java
 src/main/java/org/openapitools/client/model/Client.java
+src/main/java/org/openapitools/client/model/DataObjectMapper.java
 src/main/java/org/openapitools/client/model/DeprecatedObject.java
 src/main/java/org/openapitools/client/model/Dog.java
 src/main/java/org/openapitools/client/model/EnumArrays.java
@@ -159,3 +158,5 @@ src/main/java/org/openapitools/client/model/SpecialModelName.java
 src/main/java/org/openapitools/client/model/Tag.java
 src/main/java/org/openapitools/client/model/TestInlineFreeformAdditionalPropertiesRequest.java
 src/main/java/org/openapitools/client/model/User.java
+src/main/java/org/openapitools/client/model/package-info.java
+src/main/resources/META-INF/vertx/json-mappers.properties

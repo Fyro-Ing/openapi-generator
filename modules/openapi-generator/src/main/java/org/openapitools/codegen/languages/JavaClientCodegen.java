@@ -425,8 +425,8 @@ public class JavaClientCodegen extends AbstractJavaCodegen
         convertPropertyToBooleanAndWriteBack(USE_SPRING_BOOT4, this::setUseSpringBoot4);
         if (useJackson3 && (libRestClient || libRestTemplate || libWebClient) && !useSpringBoot4) {
             throw new IllegalArgumentException("useJackson3 for the restclient, resttemplate, and webclient libraries requires useSpringBoot4=true");
-        } else if (useJackson3 && !libNative && !libApache && !libJersey3 && !libRestClient && !libRestTemplate && !libWebClient) {
-            throw new IllegalArgumentException("useJackson3 is only supported for the 'native', 'apache-httpclient', 'jersey3', 'restclient', 'resttemplate', and 'webclient' libraries. " +
+        } else if (useJackson3 && !libNative && !libApache && !libJersey3 && !libRestClient && !libRestTemplate && !libWebClient && !libVertx) {
+            throw new IllegalArgumentException("useJackson3 is only supported for the 'native', 'apache-httpclient', 'jersey3', 'restclient', 'resttemplate', 'webclient' and 'Vert.x' libraries. " +
                     "The Spring libraries also require useSpringBoot4=true.");
         }
 

@@ -11,12 +11,17 @@ import {{invokerPackage}}.auth.OAuth;
 {{/hasOAuthMethods}}
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+{{^useJackson3}}
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+{{/useJackson3}}
+{{#useJackson3}}
+import tools.jackson.core.JacksonException;
+{{/useJackson3}}
+import {{jacksonPackage}}.core.type.TypeReference;
+import {{jacksonPackage}}.databind.DeserializationFeature;
+import {{jacksonPackage}}.databind.ObjectMapper;
+import {{jacksonPackage}}.databind.SerializationFeature;
+{{^useJackson3}}import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;{{/useJackson3}}
 {{#openApiNullable}}
 import org.openapitools.jackson.nullable.JsonNullableModule;
 {{/openApiNullable}}
@@ -463,8 +468,8 @@ public class ApiClient{{#jsr310}} extends JavaTimeFormatter{{/jsr310}} {
         } else {
             try {
                 return request.sendBuffer(Buffer.buffer(this.objectMapper.writeValueAsBytes(body)));
-            } catch (JsonProcessingException jsonProcessingException) {
-                return Future.failedFuture(jsonProcessingException);
+            } catch ({{^useJackson3}}JsonProcessingException{{/useJackson3}}{{#useJackson3}}JacksonException{{/useJackson3}} e) {
+                return Future.failedFuture(e);
             }
         }
     }
@@ -482,8 +487,8 @@ public class ApiClient{{#jsr310}} extends JavaTimeFormatter{{/jsr310}} {
         } else {
             try {
                 request.sendBuffer(Buffer.buffer(this.objectMapper.writeValueAsBytes(body)), responseHandler);
-            } catch (JsonProcessingException jsonProcessingException) {
-                responseHandler.handle(Future.failedFuture(jsonProcessingException));
+            } catch ({{^useJackson3}}JsonProcessingException{{/useJackson3}}{{#useJackson3}}JacksonException{{/useJackson3}} e) {
+                responseHandler.handle(Future.failedFuture(e));
             }
         }
     }

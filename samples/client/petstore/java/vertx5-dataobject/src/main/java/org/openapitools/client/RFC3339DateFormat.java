@@ -19,7 +19,7 @@ import java.util.Date;
 import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
+import tools.jackson.databind.util.StdDateFormat;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.26.0-SNAPSHOT")
 public class RFC3339DateFormat extends DateFormat {
